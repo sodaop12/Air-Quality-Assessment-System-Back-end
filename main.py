@@ -6,6 +6,7 @@ openai.api_key = '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'
 
 app = Flask(__name__)
 CORS(app, resources={r"/chat": {"origins": "http://localhost:8080"}})
+CORS(app)
 @app.route('/chat', methods=['POST'])
 def chat():
     # Parse the JSON input from the request body
@@ -25,6 +26,23 @@ def chat():
         result += choice.message.content
     output_text = result
     return jsonify({'output_text': output_text})
+
+@app.route('/login', methods=['POST'])
+def login():
+    # Get the username and password from the request body
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    # Perform your login logic here
+    # You can replace the following example with your own implementation
+    if username == 'admin' and password == 'password':
+        # Login successful
+        return jsonify(success=True)
+    else:
+        # Login failed
+        return jsonify(success=False)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
