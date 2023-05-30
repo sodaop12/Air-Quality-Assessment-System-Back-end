@@ -1,6 +1,7 @@
 import openai
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
+import pandas as pd
 import json
 openai.api_key = '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'
 
@@ -43,6 +44,18 @@ def login():
         # Login failed
         return jsonify(success=False)
 
+def readcsv():
+    data_frame = pd.read_csv('resource/dailyavg-2023-05-30.csv')
+    data_frame = data_frame.iloc[3:]
+    data_frame = data_frame.set_index(data_frame.columns[0])
+    row_name = 'Innovative Village ต.ป่าแดด อ.เมือง จ.เชียงใหม่'
+    column_name = 'Unnamed: 15'
+    selected_data = data_frame.loc[row_name, column_name]
+    print(selected_data)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+
+
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
