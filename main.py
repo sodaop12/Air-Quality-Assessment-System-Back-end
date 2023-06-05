@@ -45,7 +45,7 @@ def login():
         # Login failed
         return jsonify(success=False)
 @app.route('/submitcompactdata', methods=['POST'])
-def submit_data():
+def submitcompact_data():
     data_frame = pd.read_csv('resource/dailyavg-2023-05-30.csv')
     data_frame = data_frame.iloc[3:]
     data_frame = data_frame.set_index(data_frame.columns[0])
@@ -87,6 +87,29 @@ def submit_data():
         'CGRS': CGRS
     }
     return jsonify(response_data), 200
+@app.route('/submitcompletedata', methods=['POST'])
+def submitcompelete_data():
+    data = request.json
+    selected_days = data.get("selectedDays")
+    additional_days = data.get("additionalDays")
+    additional_start_date = data.get("additionalStartDate")
+    additional_end_date = data.get("additionalEndDate")
+    additional_hours = data.get("additionalHours")
+    additional_text = data.get("additionalText")
+    locations = data.get("locations")
+    locations30 = data.get("locations30")
+    print(selected_days)
+    print(additional_days)
+    print(additional_start_date)
+    print(additional_end_date)
+    print(additional_hours)
+    print(additional_text)
+    print(locations)
+    print(locations30)
+    response_data = {
+        'success': 200
+    }
+    return  jsonify(response_data), 200
 
 if __name__ == '__main__':
     app.run()
