@@ -89,6 +89,9 @@ def submitcompact_data():
     return jsonify(response_data), 200
 @app.route('/submitcompletedata', methods=['POST'])
 def submitcompelete_data():
+    data_frame = pd.read_csv('resource/dailyavg-2023-05-30.csv')
+    data_frame = data_frame.iloc[3:]
+    data_frame = data_frame.set_index(data_frame.columns[0])
     data = request.json
     selected_days = data.get("selectedDays")
     additional_days = data.get("additionalDays")
@@ -106,8 +109,22 @@ def submitcompelete_data():
     print(additional_text)
     print(locations)
     print(locations30)
+    if selected_days <= 7:
+        column_names = [f'Unnamed: {index}' for index in additional_days]
+        row_names = locations
+        sums = []
+        for row_name, col_name in zip(row_names, column_names):
+            value = data_frame.loc[row_name, col_name]
+            sums.append(value)
+        total_sum = sum(sums)
+        averageAQI = total_sum/selected_days
+        print(sums)
+        print(total_sum)
+
+
     response_data = {
-        'success': 200
+        'success': 200,
+        'calculateaverage': averageAQI,
     }
     return  jsonify(response_data), 200
 
