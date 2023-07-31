@@ -69,9 +69,16 @@ def submitcompact_data():
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "user", "content": "if i receive average AQI "
-            +str(calculateaverage)+"and i receive it for"+str(totalhour)
-            +" is it affect my health and do you have any suggestion for me"},
+            {"role": "user", "content": "Average AQI = "+str(calculateaverage)+", Max AQI = "+str(max_value)+", Min AQI = "+str(min_value)+", Total Hours ="+str(totalhour)+
+                                        " Please give Suggestions to this Patient According to the Patient's history and Assessment as a Doctor who directly works related to respiratory disease."
+                                        " Each topic is limited to only 200 characters"
+                                        "1. Diagnosis and Explanation"
+                                        "2. Relate to Air Quality Index table"
+                                        "3. Emphasizing Preventive Care"
+                                        "4. Follow-up Plan"
+                                        "5. Personalized Recommendations"
+                                        "6. Give Details of suggestions as a doctor"
+                                        },
         ]
     )
     resultGPT = ''
@@ -121,6 +128,7 @@ def submitcompelete_data():
             sums.append(value)
         total_sum = sum(sums)
         averageAQI = total_sum/selected_days
+        averageAQI_str = str(averageAQI)
         max_value = np.max([sums])
         min_value = np.min(sums)
         averagehours = sum(additional_hours)
@@ -131,11 +139,17 @@ def submitcompelete_data():
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "user", "content": "if i receive average AQI of "
-                         + str(averageAQI) + "and i receive it for"
-                         + str(totalhour) + " is it affect my health and do you have any suggestion for me  is it affect my health and do you have any suggestion for me"
-                        + " and i have congenital disease as "
-            + additional_text},
+                {"role": "user", "content": "Average AQI = " + str(averageAQI) + ", Max AQI = " + str(
+                    max_value) + ", Min AQI = " + str(min_value) + ", Total Hours =" + str(totalhour) + ", congenital disease ="+ str(additional_text) +
+                                            " Please give Suggestions to this Patient According to the Patient's history and Assessment as a Doctor who directly works related to respiratory disease."
+                                            " Each topic is limited to only 200 characters"
+                                            "1. Diagnosis and Explanation"
+                                            "2. Relate to Air Quality Index table"
+                                            "3. Emphasizing Preventive Care"
+                                            "4. Follow-up Plan"
+                                            "5. Personalized Recommendations"
+                                            "6. Give Details of suggestions as a doctor"
+                 },
             ]
         )
         resultGPT = ''
@@ -166,12 +180,18 @@ def submitcompelete_data():
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "user", "content": "if i receive average AQI of "
-                                            + str(averageAQI) + "and i receive it for"
-                                            + str(
-                    totalhour) + " is it affect my health and do you have any suggestion for me  is it affect my health and do you have any suggestion for me"
-                                            + " and i have congenital disease as "
-                                            + additional_text},
+                {"role": "user", "content": "Average AQI = " + str(averageAQI) + ", Max AQI = " + str(
+                    max_value) + ", Min AQI = " + str(min_value) + ", Total Hours =" + str(
+                    totalhour) + ", congenital disease =" + str(additional_text) +
+                                            " Please give Suggestions to this Patient According to the Patient's history and Assessment as a Doctor who directly works related to respiratory disease."
+                                            " Each topic is limited to only 200 characters"
+                                            "1. Diagnosis and Explanation"
+                                            "2. Relate to Air Quality Index table"
+                                            "3. Emphasizing Preventive Care"
+                                            "4. Follow-up Plan"
+                                            "5. Personalized Recommendations"
+                                            "6. Give Details of suggestions as a doctor"
+                 },
             ]
         )
         resultGPT = ''
@@ -195,12 +215,18 @@ def submitcompelete_data():
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "user", "content": "if i receive average AQI of "
-                                            + str(averageAQI) + "and i receive it for"
-                                            + str(
-                    totalhour) + " is it affect my health and do you have any suggestion for me  is it affect my health and do you have any suggestion for me"
-                                            + " and i have "+additional_text+"congenital disease"
-                                            },
+                {"role": "user", "content": "Average AQI = " + str(averageAQI) + ", Max AQI = " + str(
+                    max_value) + ", Min AQI = " + str(min_value) + ", Total Hours =" + str(
+                    totalhour) + ", congenital disease =" + str(additional_text) +
+                                            " Please give Suggestions to this Patient According to the Patient's history and Assessment as a Doctor who directly works related to respiratory disease."
+                                            " Each topic is limited to only 200 characters"
+                                            "1. Diagnosis and Explanation"
+                                            "2. Relate to Air Quality Index table"
+                                            "3. Emphasizing Preventive Care"
+                                            "4. Follow-up Plan"
+                                            "5. Personalized Recommendations"
+                                            "6. Give Details of suggestions as a doctor"
+                 },
             ]
         )
         resultGPT = ''
