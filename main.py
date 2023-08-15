@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 import pandas as pd
 import numpy as np
+from sklearn.ensemble import RandomForestRegressor
 import json
 openai.api_key = ''
 
@@ -245,6 +246,25 @@ def submitcompelete_data():
     }
     return  jsonify(response_data), 200
 
+@app.route('/forecast', methods=['POST'])
+def predict():
+    data = request.json['numbers']
+    if len(data) < 2:
+        return jsonify({'error': 'At least 2 numbers are required for prediction'})
+
+    X = np.array(data[:-1]).reshape(-1, 1)
+    y = np.array(data[1:])
+
+    model = RandomForestRegressor(n_estimators=100, random_state=0)
+    model.fit(X, y)
+
+    next_number = model.predict([[data[-1]]])
+
+    # Ensure the prediction is positive
+    next_number = max(0, next_number[0])
+
+    return jsonify({'forecast': next_number})
+
 if __name__ == '__main__':
     app.run()
 
@@ -277,6 +297,7 @@ end_num = 15
 
 result = generate_numbers(start_num, end_num)
 print(result)
+
 
 
 
