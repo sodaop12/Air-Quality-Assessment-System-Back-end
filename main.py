@@ -5,10 +5,10 @@ import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 import json
+import os
 openai.api_key = ''
 
 app = Flask(__name__)
-CORS(app, resources={r"/chat": {"origins": "http://localhost:8080"}})
 CORS(app)
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -264,6 +264,38 @@ def predict():
     next_number = max(0, next_number[0])
 
     return jsonify({'forecast': next_number})
+
+feedback_file = "resource/Feedback.txt"
+def save_feedback(feedback):
+    with open(feedback_file, "a") as f:
+        f.write(feedback + "\n")
+
+def get_saved_feedback():
+    if os.path.exists(feedback_file):
+        with open(feedback_file, "r") as f:
+            return [line.strip() for line in f.readlines()]
+    return []
+
+CORS(app)
+@app.route('/submit_feedback', methods=['POST'])
+def submit_feedback():
+    try:
+        feedback = request.json.get('feedback')
+
+        if not feedback:
+            return jsonify({"message": "Feedback is required."}), 400
+
+        save_feedback(feedback)  # Save feedback to the file
+
+        return jsonify({"message": "Feedback submitted successfully."}), 201
+
+    except Exception as e:
+        return jsonify({"message": "An error occurred.", "error": str(e)}), 500
+
+@app.route('/get_feedback', methods=['GET'])
+def get_feedback():
+    saved_feedback = get_saved_feedback()  # Retrieve feedback from the file
+    return jsonify({"feedback": saved_feedback})
 
 if __name__ == '__main__':
     app.run()
