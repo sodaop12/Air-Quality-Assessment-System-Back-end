@@ -246,6 +246,69 @@ def submitcompelete_data():
     }
     return  jsonify(response_data), 200
 
+@app.route('/submitcalenderdata', methods=['POST'])
+def submitcalenderdata_data():
+    data_frame = pd.read_csv('resource/dailyavg-2023-05-30.csv')
+    data_frame = data_frame.iloc[3:]
+    data_frame = data_frame.set_index(data_frame.columns[0])
+    data = request.json
+    additional_start_date = data.get("startDate")
+    additional_end_date = data.get("endDate")
+    locations30 = data.get("selectedLocations")
+    averagehours = data.get("averageHours")
+    end = additional_end_date
+    start = additional_start_date
+    if start <= end:
+        numbers = list(range(start, end + 1))
+    else:
+        numbers = list(range(start, end - 1, -1))
+    column_names = [f'Unnamed: {index}' for index in numbers]
+    row_values1 = data_frame.loc[locations30[0], column_names].apply(pd.to_numeric, errors='coerce').fillna(0)
+    row_sum1 = np.sum(row_values1)
+    row_values2 = data_frame.loc[locations30[1], column_names].apply(pd.to_numeric, errors='coerce').fillna(0)
+    row_sum2 = np.sum(row_values2)
+    row_values3 = data_frame.loc[locations30[2], column_names].apply(pd.to_numeric, errors='coerce').fillna(0)
+    row_sum3 = np.sum(row_values3)
+    aversum = sum(averagehours)
+    averageAQI = ((row_sum1 / 30) + (row_sum2 / 30) + (row_sum3 / 30)) / 3
+    totalhour = (additional_end_date - additional_start_date) * aversum
+    max_value = np.max([row_values1, row_values2, row_values3])
+    non_zero_values = [arr[arr != 0] for arr in [row_values1, row_values2, row_values3]]
+    min_value = np.min(np.concatenate(non_zero_values))
+    CGRS = ((averageAQI / 22) / 24) * totalhour
+    print("averageAQI:", averageAQI)
+    print("totalhour:", totalhour)
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "user", "content": "Average AQI = " + str(averageAQI) + ", Max AQI = " + str(
+                max_value) + ", Min AQI = " + str(min_value) + ", Total Hours =" + str(
+                totalhour) +
+                                        " Please give Suggestions to this Patient According to the Patient's history and Assessment as a Doctor who directly works related to respiratory disease."
+                                        " Each topic is limited to only 200 characters"
+                                        "1. Diagnosis and Explanation"
+                                        "2. Relate to Air Quality Index table"
+                                        "3. Emphasizing Preventive Care"
+                                        "4. Follow-up Plan"
+                                        "5. Personalized Recommendations"
+                                        "6. Give Details of suggestions as a doctor"
+             },
+        ]
+    )
+    resultGPT = ''
+    for choice in response.choices:
+        resultGPT += choice.message.content
+    output_text = resultGPT
+    response_data = {
+        'success': 200,
+        'calculateaverage': averageAQI,
+        'totalhour': totalhour,
+        'max': max_value,
+        'min': min_value,
+        'output_text': output_text,
+        'CGRS': CGRS
+    }
+    return jsonify(response_data), 200
 @app.route('/forecast', methods=['POST'])
 def predict():
     data = request.json['numbers']
