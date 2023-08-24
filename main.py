@@ -271,7 +271,7 @@ def submitcalenderdata_data():
     row_sum3 = np.sum(row_values3)
     aversum = sum(averagehours)
     averageAQI = ((row_sum1 / 30) + (row_sum2 / 30) + (row_sum3 / 30)) / 3
-    totalhour = (additional_end_date - additional_start_date) * aversum
+    totalhour = aversum
     max_value = np.max([row_values1, row_values2, row_values3])
     non_zero_values = [arr[arr != 0] for arr in [row_values1, row_values2, row_values3]]
     min_value = np.min(np.concatenate(non_zero_values))
