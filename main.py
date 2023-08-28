@@ -6,7 +6,7 @@ import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 import json
 import os
-openai.api_key = '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'
+openai.api_key = ''
 
 app = Flask(__name__)
 CORS(app)
