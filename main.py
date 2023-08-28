@@ -6,7 +6,7 @@ import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 import json
 import os
-openai.api_key = ''
+openai.api_key = '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'
 
 app = Flask(__name__)
 CORS(app)
@@ -357,8 +357,20 @@ def submit_feedback():
 
 @app.route('/get_feedback', methods=['GET'])
 def get_feedback():
-    saved_feedback = get_saved_feedback()  # Retrieve feedback from the file
-    return jsonify({"feedback": saved_feedback})
+    saved_feedback = get_saved_feedback()
+
+    feedback_data = []
+    for line in saved_feedback:
+        parts = line.split(" (")
+        if len(parts) == 2:
+            feedback = parts[0].strip()
+            rating = int(parts[1].replace(")", "").strip())
+            feedback_data.append({"feedback": feedback, "rating": rating})
+        else:
+            print("Invalid feedback format:", line)
+
+    return jsonify({"feedback": feedback_data})
+
 
 if __name__ == '__main__':
     app.run()
