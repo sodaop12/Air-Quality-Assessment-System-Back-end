@@ -284,14 +284,14 @@ def submitcalenderdata_data():
             {"role": "user", "content": "Average AQI = " + str(averageAQI) + ", Max AQI = " + str(
                 max_value) + ", Min AQI = " + str(min_value) + ", Total Hours =" + str(
                 totalhour) +
-                                        " Please give Suggestions to this Patient According to the Patient's history and Assessment as a Doctor who directly works related to respiratory disease."
-                                        " Each topic is limited to only 200 characters"
-                                        "1. Diagnosis and Explanation"
-                                        "2. Relate to Air Quality Index table"
-                                        "3. Emphasizing Preventive Care"
-                                        "4. Follow-up Plan"
-                                        "5. Personalized Recommendations"
-                                        "6. Give Details of suggestions as a doctor"
+                                        "\n Please give Suggestions to this Patient According to the Patient's history and Assessment as a Doctor who directly works related to respiratory disease."
+                                        "\n Each topic is limited to only 200 characters"
+                                        "\n1. Diagnosis and Explanation"
+                                        "\n2. Relate to Air Quality Index table"
+                                        "\n3. Emphasizing Preventive Care"
+                                        "\n4. Follow-up Plan"
+                                        "\n5. Personalized Recommendations"
+                                        "\n6. Give Details of suggestions as a doctor"
              },
         ]
     )
