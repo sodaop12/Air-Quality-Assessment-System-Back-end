@@ -111,22 +111,15 @@ def submitcompelete_data():
     locations = data.get("locations")
     locations30 = data.get("locations30")
     averagehours = data.get("hours30")
-    print(selected_days)
-    print(additional_days)
-    print(additional_start_date)
-    print(additional_end_date)
-    print(additional_hours)
-    print(additional_text)
-    print(locations)
-    print(locations30)
     averageAQI = 0
     if selected_days <= 7:
         column_names = [f'Unnamed: {index}' for index in additional_days]
         row_names = locations
         sums = []
         for row_name, col_name in zip(row_names, column_names):
-            value = data_frame.loc[row_name, col_name]
+            value = float(data_frame.loc[row_name, col_name])
             sums.append(value)
+        print(sums)
         total_sum = sum(sums)
         averageAQI = total_sum/selected_days
         averageAQI_str = str(averageAQI)
@@ -135,8 +128,6 @@ def submitcompelete_data():
         averagehours = sum(additional_hours)
         totalhour = selected_days * averagehours
         CGRS = ((averageAQI / 22) / 24) * totalhour
-        print(sums)
-        print(total_sum)
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
@@ -237,14 +228,14 @@ def submitcompelete_data():
 
     response_data = {
         'success': 200,
-        'calculateaverage': averageAQI,
+        'calculateaverage':  averageAQI,
         'totalhour': totalhour,
         'max': max_value,
         'min': min_value,
         'output_text': output_text,
         'CGRS': CGRS
     }
-    return  jsonify(response_data), 200
+    return jsonify(response_data), 200
 
 @app.route('/submitcalenderdata', methods=['POST'])
 def submitcalenderdata_data():
@@ -276,8 +267,6 @@ def submitcalenderdata_data():
     non_zero_values = [arr[arr != 0] for arr in [row_values1, row_values2, row_values3]]
     min_value = np.min(np.concatenate(non_zero_values))
     CGRS = ((averageAQI / 22) / 24) * totalhour
-    print("averageAQI:", averageAQI)
-    print("totalhour:", totalhour)
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
